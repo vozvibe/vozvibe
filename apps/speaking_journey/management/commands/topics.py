@@ -201,7 +201,86 @@ BEGINNER_TOPICS = [
         "small"
     ],
     "fluency_practice_prompt": "Ask your partner where they live. Then, say your city and describe it with one word."
+},
+
+{
+    "title": "What's Your Hobby?",
+    "description": "Learn how to ask and answer questions about hobbies. Practice saying what you like to do in your free time and asking others about theirs.",
+    "material": [
+        "What's your hobby?",
+        "I like reading.",
+        "I like playing football.",
+        "I like cooking.",
+        "That sounds fun!",
+        "Me too!"
+    ],
+    "conversation": [
+        {
+            "speaker": "A",
+            "text": "What's your hobby?"
+        },
+        {
+            "speaker": "B",
+            "text": "I like reading. How about you?"
+        },
+        {
+            "speaker": "A",
+            "text": "I like playing football."
+        },
+        {
+            "speaker": "B",
+            "text": "That sounds fun!"
+        }
+    ],
+    "vocabulary": [
+        "hobby",
+        "reading",
+        "playing",
+        "cooking",
+        "fun"
+    ],
+    "fluency_practice_prompt": "Ask your partner about their hobby. Then, say what you like to do in your free time."
+},
+
+{
+    "title": "What’s Your Favorite Food?",
+    "description": "Learn how to ask and answer questions about food you like. Practice saying your favorite food and reacting to others.",
+    "material": [
+        "What’s your favorite food?",
+        "I like pizza.",
+        "I like noodles.",
+        "That sounds good!",
+        "Yes, it is!"
+    ],
+    "conversation": [
+        {
+            "speaker": "A",
+            "text": "What’s your favorite food?"
+        },
+        {
+            "speaker": "B",
+            "text": "I like pizza. What about you?"
+        },
+        {
+            "speaker": "A",
+            "text": "I like noodles."
+        },
+        {
+            "speaker": "B",
+            "text": "That sounds good!"
+        }
+    ],
+    "vocabulary": [
+        "favorite",
+        "food",
+        "like",
+        "good",
+        "sounds"
+    ],
+    "fluency_practice_prompt": "Ask your partner about their favorite food. Then, say what your favorite food is."
 }
+
+
 
 
 
@@ -2200,7 +2279,76 @@ INTERMEDIATE_TOPICS = [
         "unlucky", "accident", "problem", "stressful", "embarrassed", "better"
     ],
     "fluency_practice_prompt": "Talk about a bad day you had recently. Describe what went wrong, how you felt, and what you did to handle the situation. End your story with something positive or what you learned from that experience."
+},
+
+{
+    "title": "Dreams and Ambitions",
+    "description": "Learn how to talk about your goals, hopes, and future plans. Practice expressing what you want to achieve in life and asking others about their ambitions.",
+    "material": [
+        "What do you want to be in the future?",
+        "I want to be a teacher.",
+        "My dream is to travel around the world.",
+        "I hope to start my own business someday.",
+        "I’d like to become a doctor.",
+        "What are your long-term goals?",
+        "I’m working hard to make my dream come true.",
+        "I want to improve myself and learn new skills."
+    ],
+    "conversation": [
+        {"speaker": "A", "text": "So, what’s your biggest dream, Fira?"},
+        {"speaker": "B", "text": "Hmm… I’ve always wanted to be a writer. I love creating stories."},
+        {"speaker": "A", "text": "That’s great! Are you writing anything now?"},
+        {"speaker": "B", "text": "Yes, I’m working on a short novel. It’s not easy, but I enjoy it."},
+        {"speaker": "A", "text": "Nice! I admire people who follow their dreams."},
+        {"speaker": "B", "text": "Thanks! What about you, Adit? What’s your dream?"},
+        {"speaker": "A", "text": "I want to start my own tech company someday. I love building apps."},
+        {"speaker": "B", "text": "That sounds exciting. I’m sure you can do it if you keep trying."},
+        {"speaker": "A", "text": "Thanks! I believe hard work really pays off."},
+        {"speaker": "B", "text": "Exactly. Let’s both chase our dreams!"}
+    ],
+    "vocabulary": [
+        "dream", "ambition", "goal", "hope", "plan", "future", "career",
+        "achievement", "motivation", "success", "hard work", "believe",
+        "inspire", "passion", "dedication", "effort", "determination",
+        "challenge", "opportunity", "make it happen"
+    ],
+    "fluency_practice_prompt": "What is your biggest dream or ambition in life? What steps are you taking to achieve it?"
+},
+
+{
+    "title": "Starting a New Diet",
+    "description": "Learn how to talk naturally about changing your eating habits, trying new diets, and staying healthy. Practice real-life expressions people use when discussing food and lifestyle changes.",
+    "material": [
+        "I’m trying to eat healthier lately.",
+        "I just started a new diet.",
+        "I’m cutting down on sugar and snacks.",
+        "I’m trying to eat less rice and bread.",
+        "I’ve been drinking more water these days.",
+        "I’m avoiding fast food now.",
+        "It’s hard, but I’m getting used to it.",
+        "I feel a lot better since I changed my diet."
+    ],
+    "conversation": [
+        {"speaker": "A", "text": "Hey Maya, you’re skipping fries today?"},
+        {"speaker": "B", "text": "Yeah, I’m trying to eat healthier. I just started a new diet."},
+        {"speaker": "A", "text": "Oh, really? What kind of diet are you doing?"},
+        {"speaker": "B", "text": "Nothing too strict. I’m just cutting down on sugar and fried food."},
+        {"speaker": "A", "text": "That’s a good idea. I should probably do the same."},
+        {"speaker": "B", "text": "Yeah, it’s tough at first, but I feel lighter already."},
+        {"speaker": "A", "text": "Nice! Are you still drinking soda?"},
+        {"speaker": "B", "text": "Nope, I stopped last week. I drink lemon water instead."},
+        {"speaker": "A", "text": "Wow, that’s impressive. I could never give up soda!"},
+        {"speaker": "B", "text": "Haha, you could if you tried. Start small—it really helps."}
+    ],
+    "vocabulary": [
+        "go on a diet", "cut down on", "avoid", "give up", "healthy", "junk food",
+        "sugar", "snack", "portion", "energy", "light", "habit", "try to eat", "feel better",
+        "get used to", "skip", "cheat day", "balanced meal", "craving", "stay healthy"
+    ],
+    "fluency_practice_prompt": "Have you ever tried to eat healthier or go on a diet? What changes did you make, and how did it go?"
 }
+
+
 
 ]
 
@@ -2691,5 +2839,92 @@ ADVANCED_TOPICS = [
             "standard of service"
         ],
         "fluency_practice_prompt": "Describe a time you had to apologize for a professional mistake and explain the steps you took to resolve the issue with the client or colleague."
+    },
+    {
+        "title": "Requesting a Promotion",
+        "description": "Practice discussing your career growth and compensation with your manager. Learn how to effectively ask for a promotion or a salary increase.",
+        "material": [
+            "I'd like to discuss my career trajectory here.",
+            "I've taken on significant new responsibilities.",
+            "My recent project resulted in a 15% efficiency gain.",
+            "I believe my contributions have exceeded the expectations of my current role.",
+            "Based on market research, my salary is below the industry average.",
+            "I'm eager to advance within the company.",
+            "What would be the next steps to be considered for a promotion?",
+            "I'm confident I can bring even more value in a senior position.",
+            "Could we review my compensation package?",
+            "I'm committed to my long-term future with the team."
+        ],
+        "conversation": [
+            {
+                "speaker": "A",
+                "text": "Thanks for meeting with me. I wanted to talk about my professional development and career path."
+            },
+            {
+                "speaker": "B",
+                "text": "Of course. I'm always happy to discuss that. What's on your mind?"
+            },
+            {
+                "speaker": "A",
+                "text": "Over the past year, I've taken on several new responsibilities, such as leading the new client initiative and mentoring junior team members."
+            },
+            {
+                "speaker": "B",
+                "text": "Yes, your work on that initiative was outstanding and it had a significant impact. I appreciate you stepping up."
+            },
+            {
+                "speaker": "A",
+                "text": "Thank you. I feel I've consistently performed beyond the scope of my current role, and I'd like to be considered for a promotion to a senior position."
+            },
+            {
+                "speaker": "B",
+                "text": "I understand and I appreciate you bringing this to me directly. The timing is good, as we are heading into our annual review cycle."
+            },
+            {
+                "speaker": "A",
+                "text": "That's great to hear. I've also done some research, and it seems my current compensation is not fully aligned with the market rate for my level of contribution."
+            },
+            {
+                "speaker": "B",
+                "text": "Okay, that's a fair point to raise. To move this forward, I'll need you to formally document these achievements in your performance review file."
+            },
+            {
+                "speaker": "A",
+                "text": "I can certainly do that. What would the process look like after that?"
+            },
+            {
+                "speaker": "B",
+                "text": "Once I have your summary, I will review it and discuss it with HR and upper management to see what possibilities are available. I can't make promises, but I will advocate for you."
+            },
+            {
+                "speaker": "A",
+                "text": "I really appreciate that. I'll get the updated document to you by the end of the week."
+            },
+            {
+                "speaker": "B",
+                "text": "Perfect. Let's schedule a follow-up in two weeks to discuss the progress."
+            }
+        ],
+        "vocabulary": [
+            "compensation",
+            "career path",
+            "take on responsibilities",
+            "scope of a role",
+            "exceed expectations",
+            "market rate",
+            "industry average",
+            "career trajectory",
+            "performance review",
+            "advocate for someone",
+            "professional development",
+            "significant impact",
+            "upper management",
+            "to be considered for",
+            "align with",
+            "contribution",
+            "raise a point",
+            "follow-up"
+        ],
+        "fluency_practice_prompt": "Prepare a three-minute pitch to your manager explaining why you deserve a promotion, highlighting your key achievements and future potential."
     },
 ]
