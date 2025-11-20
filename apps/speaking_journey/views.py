@@ -1938,44 +1938,47 @@ def _fallback_grammar_questions(topic: Topic, n: int) -> list[dict]:
 def _transcribe_audio_with_whisper(audio_file):
     """Transcribe audio using OpenAI Whisper tiny.en model"""
     try:
-        # Allow disabling via environment to prefer faster-whisper on constrained hosts (e.g., Railway)
-        if str(os.environ.get('DISABLE_WHISPER', '')).strip().lower() in {"1", "true", "yes"}:
-            return ""
-        # Import lazily to avoid import-time issues
+        # Treat DISABLE_WHISPER as disabling only the local openai-whisper fallback, not the hosted API.
+        disable_local_whisper = str(os.environ.get('DISABLE_WHISPER', '')).strip().lower() in {"1", "true", "yes"}
+
+        # Lazy-import local openai-whisper only when allowed and available; keep it optional.
         global _openai_whisper
-        if _openai_whisper is None:
-            try:
-                # Patch coverage types for numba/coverage cross-version compatibility
+        model = None
+        if not disable_local_whisper:
+            if _openai_whisper is None:
                 try:
-                    import coverage.types as _cov_types  # type: ignore
-                    # Map Tracer <-> TTracer
-                    if not hasattr(_cov_types, 'Tracer') and hasattr(_cov_types, 'TTracer'):
-                        setattr(_cov_types, 'Tracer', getattr(_cov_types, 'TTracer'))
-                    if not hasattr(_cov_types, 'TTracer') and hasattr(_cov_types, 'Tracer'):
-                        setattr(_cov_types, 'TTracer', getattr(_cov_types, 'Tracer'))
-                    # Map ShouldTraceFn <-> TShouldTraceFn
-                    if not hasattr(_cov_types, 'TShouldTraceFn') and hasattr(_cov_types, 'ShouldTraceFn'):
-                        setattr(_cov_types, 'TShouldTraceFn', getattr(_cov_types, 'ShouldTraceFn'))
-                    if not hasattr(_cov_types, 'ShouldTraceFn') and hasattr(_cov_types, 'TShouldTraceFn'):
-                        setattr(_cov_types, 'ShouldTraceFn', getattr(_cov_types, 'TShouldTraceFn'))
-                    # Define a minimal fallback when neither exists (older coverage.py versions)
-                    if not hasattr(_cov_types, 'TShouldTraceFn') and not hasattr(_cov_types, 'ShouldTraceFn'):
-                        try:
-                            _T = _cov_types.Callable[[str, _cov_types.FrameType], _cov_types.TFileDisposition]  # type: ignore[attr-defined]
-                        except Exception:
-                            _T = object  # type: ignore
-                        setattr(_cov_types, 'TShouldTraceFn', _T)
-                        setattr(_cov_types, 'ShouldTraceFn', _T)
+                    # Patch coverage types for numba/coverage cross-version compatibility
+                    try:
+                        import coverage.types as _cov_types  # type: ignore
+                        # Map Tracer <-> TTracer
+                        if not hasattr(_cov_types, 'Tracer') and hasattr(_cov_types, 'TTracer'):
+                            setattr(_cov_types, 'Tracer', getattr(_cov_types, 'TTracer'))
+                        if not hasattr(_cov_types, 'TTracer') and hasattr(_cov_types, 'Tracer'):
+                            setattr(_cov_types, 'TTracer', getattr(_cov_types, 'Tracer'))
+                        # Map ShouldTraceFn <-> TShouldTraceFn
+                        if not hasattr(_cov_types, 'TShouldTraceFn') and hasattr(_cov_types, 'ShouldTraceFn'):
+                            setattr(_cov_types, 'TShouldTraceFn', getattr(_cov_types, 'ShouldTraceFn'))
+                        if not hasattr(_cov_types, 'ShouldTraceFn') and hasattr(_cov_types, 'TShouldTraceFn'):
+                            setattr(_cov_types, 'ShouldTraceFn', getattr(_cov_types, 'TShouldTraceFn'))
+                        # Define a minimal fallback when neither exists (older coverage.py versions)
+                        if not hasattr(_cov_types, 'TShouldTraceFn') and not hasattr(_cov_types, 'ShouldTraceFn'):
+                            try:
+                                _T = _cov_types.Callable[[str, _cov_types.FrameType], _cov_types.TFileDisposition]  # type: ignore[attr-defined]
+                            except Exception:
+                                _T = object  # type: ignore
+                            setattr(_cov_types, 'TShouldTraceFn', _T)
+                            setattr(_cov_types, 'ShouldTraceFn', _T)
+                    except Exception:
+                        pass
+                    import whisper as _w
+                    _openai_whisper = _w
                 except Exception:
-                    pass
-                import whisper as _w
-                _openai_whisper = _w
-            except Exception:
-                return ""
-        # Load Whisper model once and reuse (tiny.en is ~75MB)
-        if not hasattr(_transcribe_audio_with_whisper, '_model'):
-            _transcribe_audio_with_whisper._model = _openai_whisper.load_model("tiny.en")
-        model = _transcribe_audio_with_whisper._model
+                    _openai_whisper = None
+            if _openai_whisper is not None:
+                # Load Whisper model once and reuse (tiny.en is ~75MB)
+                if not hasattr(_transcribe_audio_with_whisper, '_model'):
+                    _transcribe_audio_with_whisper._model = _openai_whisper.load_model("tiny.en")
+                model = _transcribe_audio_with_whisper._model
 
         # Persist upload to a temp file using original extension, then convert to 16kHz mono WAV
         try:
@@ -2076,7 +2079,10 @@ def _transcribe_audio_with_whisper(audio_file):
                     pass
                 return api_text
 
-            # Fallback to local Whisper
+            # Fallback to local Whisper only when a model is available and not disabled
+            if model is None:
+                return ""
+
             result = model.transcribe(conv_path, language='en')
             transcription = (result.get("text") or "").strip()
             try:
