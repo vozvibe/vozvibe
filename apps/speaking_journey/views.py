@@ -1980,7 +1980,9 @@ def _transcribe_audio_with_whisper(audio_file):
                     _transcribe_audio_with_whisper._model = _openai_whisper.load_model("tiny.en")
                 model = _transcribe_audio_with_whisper._model
 
-        # Persist upload to a temp file using original extension, then convert to 16kHz mono WAV
+        # Persist upload to a temp file using original extension.
+        # Prefer 16kHz mono WAV via ffmpeg when available, but fall back to the
+        # original file if ffmpeg is missing (e.g., certain Railway images).
         try:
             orig_name = getattr(audio_file, 'name', '')
             ext = os.path.splitext(orig_name)[1] or '.m4a'
@@ -1992,6 +1994,8 @@ def _transcribe_audio_with_whisper(audio_file):
             src_path = src.name
 
         conv_path = src_path + '.wav'
+        api_input_path = conv_path
+        ffmpeg_ok = True
         try:
             subprocess.run(
                 ['ffmpeg', '-y', '-i', src_path, '-ac', '1', '-ar', '16000', conv_path],
@@ -2000,34 +2004,33 @@ def _transcribe_audio_with_whisper(audio_file):
                 check=True
             )
         except Exception as e:
+            # On hosts without ffmpeg, log and fall back to the original upload
+            # instead of aborting transcription entirely.
             logger.error('ffmpeg conversion failed for Whisper ASR: %s', e)
-            try:
-                if os.path.exists(src_path):
-                    os.unlink(src_path)
-            except Exception:
-                pass
-            return ""
+            ffmpeg_ok = False
+            api_input_path = src_path
 
         # Optional short-audio guard to avoid empty/invalid transcripts
-        try:
-            with wave.open(conv_path, 'rb') as wf:
-                frames = wf.getnframes()
-                rate = wf.getframerate() or 16000
-                duration = frames / float(rate)
-                if duration < 0.25:
-                    try:
-                        if os.path.exists(conv_path):
-                            os.unlink(conv_path)
-                    except Exception:
-                        pass
-                    try:
-                        if os.path.exists(src_path):
-                            os.unlink(src_path)
-                    except Exception:
-                        pass
-                    return ""
-        except Exception:
-            pass
+        if ffmpeg_ok:
+            try:
+                with wave.open(conv_path, 'rb') as wf:
+                    frames = wf.getnframes()
+                    rate = wf.getframerate() or 16000
+                    duration = frames / float(rate)
+                    if duration < 0.25:
+                        try:
+                            if os.path.exists(conv_path):
+                                os.unlink(conv_path)
+                        except Exception:
+                            pass
+                        try:
+                            if os.path.exists(src_path):
+                                os.unlink(src_path)
+                        except Exception:
+                            pass
+                        return ""
+            except Exception:
+                pass
 
         try:
             # Try OpenAI Whisper API first if key present and not disabled
@@ -2042,7 +2045,7 @@ def _transcribe_audio_with_whisper(audio_file):
                         'response_format': 'json',
                         'language': 'en'
                     }
-                    with open(conv_path, 'rb') as f:
+                    with open(api_input_path, 'rb') as f:
                         files = {'file': ('audio.wav', f, 'audio/wav')}
                         resp = requests.post('https://api.openai.com/v1/audio/transcriptions', headers=headers, data=data, files=files, timeout=60)
                     if getattr(resp, 'status_code', 0) == 200:
@@ -2083,7 +2086,7 @@ def _transcribe_audio_with_whisper(audio_file):
             if model is None:
                 return ""
 
-            result = model.transcribe(conv_path, language='en')
+            result = model.transcribe(api_input_path, language='en')
             transcription = (result.get("text") or "").strip()
             try:
                 logger.info('ASR used: openai-whisper (local, speaking_journey), chars=%d', len(transcription))
